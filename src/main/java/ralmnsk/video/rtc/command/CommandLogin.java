@@ -190,6 +190,10 @@ public class CommandLogin implements Command {
     }
 
     public void sendToAll(Map<WebSocketSession,User> sessions, TextMessage backTextMessage){
+        sessions.keySet().stream()
+                .filter(s->!s.isOpen())
+                .forEach(s->sessions.remove(s));
+
         sessions.keySet().stream().forEach(s-> {
             try {
                 s.sendMessage(backTextMessage);

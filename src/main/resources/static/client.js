@@ -8,8 +8,11 @@ var msgPoints = "...";
 var msg="You have a call";
 var key; //key for accessing to signaling server
 var users; //names of users
+var remoteUser;
 
+onloadPage();
 
+//Message that something happens: connecting to the server, have a call
 function createMsg(msg) {
     var line = document.getElementById("line");
     line.innerHTML = "<h3 id=\"msg\">"+msg+"</h3>";
@@ -151,6 +154,7 @@ function handleOffer(offer) {
 function handleCandidate(candidate) {
     peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
     // countIceCandidate = countIceCandidate + 1;
+    buttonsHandler("handleCandidate");
     console.log("handleCandidate");
 }
 
@@ -184,7 +188,10 @@ function handleKey(data){
     });
 }
 
+//handleUsers starts after successful registration
 function handleUsers(data){
+    if(login != null){
+
     addUser();
     var list = document.getElementById("usersList");
     while(list.firstChild != null){
@@ -212,6 +219,71 @@ function handleUsers(data){
             document.getElementById("usersList").appendChild(node);
         }
     }
+    buttonsHandler("handleUsers");
+    changeMsg("You have logged in.");
+    }
+}
+
+//manage buttons
+
+function buttonsHandler(event){ //command
+var toRegBtn;
+var toLogBtn;
+var logout;
+var btnStop;
+var logDiv;
+
+    console.log("eventHandler: ", event);
+    //when user connected disable an registration, login and enable logout and stop call buttons
+    toRegBtn = document.getElementById("toRegBtn"); //.style.display = view2;
+    toLogBtn = document.getElementById("toLogBtn"); //.style.display = view2;
+    logout = document.getElementById("logout"); //.style.display = view1;
+    btnStop = document.getElementById("btnStop");
+    logDiv = document.getElementById("logDiv");
+
+    switch (event) {
+        case "onloadPage":
+                toRegBtn.style.display = "block";
+                toLogBtn.style.display = "block";
+                logout.style.display = "none";
+                btnStop.style.display = "none";
+            break;
+        case "handleUsers":
+                toRegBtn.style.display = "none";
+                toLogBtn.style.display = "none";
+                logout.style.display = "block";
+                logDiv.style.display = "none";
+            break;
+        case "stopCall":
+                toRegBtn.style.display = "none";
+                toLogBtn.style.display = "none";
+                logout.style.display = "block";
+                btnStop.style.display = "none";
+            break;
+        case "hangUp":
+            toRegBtn.style.display = "none";
+            toLogBtn.style.display = "none";
+            logout.style.display = "block";
+            btnStop.style.display = "none";
+            break;
+        case "handleCandidate":
+                toRegBtn.style.display = "none";
+                toLogBtn.style.display = "none";
+                logout.style.display = "block";
+                btnStop.style.display = "block";
+            break;
+        case "logout":
+                toRegBtn.style.display = "block";
+                toLogBtn.style.display = "block";
+                logout.style.display = "none";
+                btnStop.style.display = "none";
+            break;
+        default:
+            break;
+    }
+
+    //hide logDiv (login and password input)
+    // showElement("logDiv");
 }
 
 function addUser(){
@@ -219,22 +291,24 @@ function addUser(){
     userDiv.innerText = login +" [me]";
 }
 
-// call commands ----------------------------------------------------------------
+// call and hung up commands ----------------------------------------------------------------
+//choose remote user and make call
 function connectRemoteUser(event) {
-    send({
-       event:"connect",
-        data: this.id,            //a remote user
-        key:key
-    });
+    remoteUser = this.id;
+    call();
+    // document.getElementById(this.id).style.background = "#92a8d1";
+    // document.getElementById("btnStop").display = "block";
+    // document.getElementById("btnStop").disabled = false;
     console.log("connectRemoteUser, this id: "+this.id);
 }
 
+
 function call() {
-        createOffer();
     send({
         event:"call",
-        data:"call"
+        data:remoteUser
     });
+        createOffer();
     navigator.mediaDevices.getUserMedia({
         video: {
             width: 480,
@@ -268,8 +342,13 @@ function hangUp() {
     document.getElementById("localVideo").remove();
     document.getElementById("remoteVideo").remove();
     videos.innerHTML += "<video id=\"localVideo\" autoplay></video><video id=\"remoteVideo\" autoplay></video>";
+    document.getElementById("btnStop").display = "none";
+
+    lightOffUsers();
+    buttonsHandler("hangUp");
     console.log("hangUp()");
 }
+
 
 function stopCall() {
     hangUp();
@@ -277,9 +356,20 @@ function stopCall() {
         event:"hangUp",
         data:"hangUp"
     });
+    lightOffUsers();
+    remoteUser = null;
+    buttonsHandler("stopCall");
 }
 
-// register and login commands
+function lightOffUsers(){
+
+    // for(i in users){
+    //     document.getElementById(users[i]).style.background ="#f2f2f2";
+    // }
+}
+
+
+// register and login-logout commands ------------------------------------------------
 var loginReg;
 var passwordReg;
 var address;
@@ -329,9 +419,13 @@ function logout() {
     document.getElementById("msg").innerText = "You've logged out. The connection was closed.";
     document.getElementById("user").innerText = null;
 
-    conn.close();
+    // conn.close();
+
+    buttonsHandler("logout");
     console.log("logout");
 }
+
+// elements manipulations ----------------------------------------------------------
 
         //show regDiv
 function regDiv() {
@@ -340,6 +434,7 @@ function regDiv() {
         //show logDiv
 function logDiv() {
     showElement("logDiv");
+    // onloadPage();
 }
         //show any element
 function showElement(element) {
@@ -351,6 +446,13 @@ function showElement(element) {
     }
 }
 
+// on load page
+function onloadPage(){
+    setTimeout(function(){
+        createConnection();
+        buttonsHandler("onloadPage");
+    },500)
+};
 
 //--------------------------------------------------------------------------
 

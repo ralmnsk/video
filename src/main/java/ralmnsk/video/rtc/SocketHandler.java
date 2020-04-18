@@ -16,6 +16,7 @@ import java.util.Map;
 public class SocketHandler extends TextWebSocketHandler {
 
     private Map<WebSocketSession, User> sessions = new CopyOnWriteLinkedHashMap<>();   //ArrayList<>();
+    private Map<WebSocketSession, WebSocketSession> pairs = new CopyOnWriteLinkedHashMap<>();
     private MessageHandler messageHandler;
     private WebSocketSession currentSession;
 
@@ -34,22 +35,28 @@ public class SocketHandler extends TextWebSocketHandler {
         return sessions;
     }
 
+    public Map<WebSocketSession, WebSocketSession> getPairs() {
+        return pairs;
+    }
+
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
 //        super.handleTextMessage(session, message);
         currentSession = session;
                 System.out.println("handleTextMessage: "+message.getPayload());
-
-        for(WebSocketSession wsSession:sessions.keySet()){
-            if(wsSession.isOpen()&&!session.getId().equals(wsSession.getId())){
-                try {
-                    wsSession.sendMessage(message);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+//                if(sessions.containsKey(session)){
+//                    for(WebSocketSession wsSession:sessions.keySet()){
+//                        if(wsSession.isOpen()&&!session.getId().equals(wsSession.getId())){
+//                            try {
+//                                wsSession.sendMessage(message);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                } else if (pairs.containsKey(session)){
+//
+//                }
 
         Command command = messageHandler.getCommandByMessage(message);
         command.setMessage(message);

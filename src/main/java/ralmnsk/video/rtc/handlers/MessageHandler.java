@@ -17,7 +17,7 @@ public class MessageHandler {
     }
 
     public Command getCommandByMessage(TextMessage message){
-        Command command = new CommandDefault();
+        Command command = config.commandDefault();
         if(message.getPayload() != null ){
         String stringCommand = config.nameCommandGetter().parse(message.getPayload());
             switch (stringCommand){
@@ -29,6 +29,12 @@ public class MessageHandler {
                     break;
                 case USERS:
                     command = config.commandUsers();
+                    break;
+                case CALL:
+                    command = config.commandCall();
+                    break;
+                case HANG_UP:
+                    command = config.commandHangUp();
                     break;
                 default:
                     break;

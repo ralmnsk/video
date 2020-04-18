@@ -12,5 +12,7 @@ public class Constants {
     public final static String USERS = "users";
     public final static String USERS_ERROR = "users error happened";
     public final static String KEY = "key";
+    public final static String CALL = "call";
+    public final static String HANG_UP = "hangUp";
     public static final int RATE = 1000000;
 }

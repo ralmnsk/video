@@ -76,5 +76,18 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
         return new CommandLogout(objectMapper(),modelMapper(),serviceConfig.userService());
     }
 
+    @Bean
+    public CommandCall commandCall(){
+        return new CommandCall(objectMapper(),modelMapper(),serviceConfig.userService());
+    }
 
+    @Bean
+    public CommandDefault commandDefault(){
+        return new CommandDefault(objectMapper(),modelMapper(),serviceConfig.userService());
+    }
+
+    @Bean
+    public CommandHangUp commandHangUp(){
+        return new CommandHangUp(objectMapper(),modelMapper(),serviceConfig.userService());
+    }
 }
