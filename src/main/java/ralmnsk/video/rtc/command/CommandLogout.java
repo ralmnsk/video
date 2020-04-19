@@ -25,6 +25,7 @@ public class CommandLogout extends CommandLogin {
             if (key != null){
                 sessions.keySet()
                         .stream()
+                        .filter(k->sessions.get(k).getLogin()!=null)
                         .filter(k->sessions.get(k).getLogin().equals(user.getLogin()))
                         .forEach(k->sessions.remove(k));
                 TextMessage msgList = getUserList(key);

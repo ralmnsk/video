@@ -6,6 +6,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import ralmnsk.video.service.UserService;
 
+import static ralmnsk.video.rtc.Constants.HANG_UP;
+
 public class CommandHangUp extends CommandLogin {
 
     public CommandHangUp(ObjectMapper objectMapper, ModelMapper modelMapper, UserService userService) {
@@ -18,6 +20,8 @@ public class CommandHangUp extends CommandLogin {
             if (currentSession != null){
                 WebSocketSession remoteSession = getSocketHandler().getPairs().get(currentSession);
                 if (remoteSession != null){
+//                    sendEventToRemoteUser(HANG_UP,remoteSession);
+                    sendToCurrentSession(remoteSession,getMessage());
                     getSocketHandler().getPairs().remove(currentSession);
                     getSocketHandler().getPairs().remove(remoteSession);
                 }

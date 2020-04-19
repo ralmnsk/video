@@ -23,7 +23,7 @@ function changeMsg(msg){
     // setTimeout(function (){console.log('delete msg')},3000);
     createMsg(msg);
 }
-
+//-----------------------------------------------------------------------
 //connecting to our signaling server
 
 function createConnection(){
@@ -56,10 +56,10 @@ function createConnection(){
                 handleCandidate(data);
                 break;
             case "call":
-                youHaveCall();
+                youHaveCall(data);
                 break;
-            case "hangUp":
-                hangUp();
+            case "hangup":
+                hangUp(data);
                 break;
             case "message":
                 handleMessage(data);
@@ -130,7 +130,7 @@ function createOffer() {
     console.log("createOffer()");
 }
 
-// handlers------------
+// handlers--------------------------------------------------------------------
 function handleOffer(offer) {
     peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
 
@@ -167,10 +167,12 @@ function handleAnswer(answer) {
     }
 }
 
-function youHaveCall(){
+function youHaveCall(data){
+    console.log("youHaveCall(), data :",data);
+    document.getElementById(data).style.background = "#FFA500";
     countCalls = countCalls+1;
     changeMsg(msg);
-    console.log('youHaveCall, countCalls :'+countCalls);
+    console.log('youHaveCall(), countCalls :'+countCalls);
 }
 
 function handleMessage(data){
@@ -260,7 +262,7 @@ var logDiv;
                 logout.style.display = "block";
                 btnStop.style.display = "none";
             break;
-        case "hangUp":
+        case "hangup":
             toRegBtn.style.display = "none";
             toLogBtn.style.display = "none";
             logout.style.display = "block";
@@ -278,12 +280,12 @@ var logDiv;
                 logout.style.display = "none";
                 btnStop.style.display = "none";
             break;
+        case "call":
+                btnStop.style.display = "block";
+            break;
         default:
             break;
     }
-
-    //hide logDiv (login and password input)
-    // showElement("logDiv");
 }
 
 function addUser(){
@@ -296,7 +298,7 @@ function addUser(){
 function connectRemoteUser(event) {
     remoteUser = this.id;
     call();
-    // document.getElementById(this.id).style.background = "#92a8d1";
+    document.getElementById(this.id).style.background = "#FFA500";
     // document.getElementById("btnStop").display = "block";
     // document.getElementById("btnStop").disabled = false;
     console.log("connectRemoteUser, this id: "+this.id);
@@ -304,6 +306,7 @@ function connectRemoteUser(event) {
 
 
 function call() {
+
     send({
         event:"call",
         data:remoteUser
@@ -319,20 +322,28 @@ function call() {
             document.getElementById("localVideo").srcObject = stream;
             peerConnection.addTrack(stream.getTracks()[0], stream);
         });
-
-    console.log("call(): media track was added and createOffer was made");
+    buttonsHandler("call");
+    console.log("call(): media track was added and createOffer was made, remoteUser:",remoteUser);
 }
 
-function hangUp() {
+function hangUp(data) {
     changeMsg(msgPoints);
     document.getElementById("remoteVideo").srcObject = null;
     peerConnection.onicecandidate = null;
     peerConnection.ontrack = null;
     var stream = document.getElementById("localVideo").srcObject;
-    stream.stop = function (){
-        this.getTracks().forEach(function(track) { track.stop(); });
-    };
-    stream.stop();
+    if(stream != null){
+        stream.stop = function (){
+            this.getTracks().forEach(function(track) { track.stop(); });
+        };
+        stream.stop();
+    }else{
+        return;
+        // let tracks = peerConnection.getTracks();
+        // for (i in tracks){
+        //     tracks[i].stop();
+        // }
+    }
     countIceCandidate = 0;
     countCalls = 0;
     peerConnection.close();
@@ -344,8 +355,8 @@ function hangUp() {
     videos.innerHTML += "<video id=\"localVideo\" autoplay></video><video id=\"remoteVideo\" autoplay></video>";
     document.getElementById("btnStop").display = "none";
 
-    lightOffUsers();
-    buttonsHandler("hangUp");
+    lightOffUsers(data);
+    buttonsHandler("hangup");
     console.log("hangUp()");
 }
 
@@ -353,19 +364,38 @@ function hangUp() {
 function stopCall() {
     hangUp();
     send({
-        event:"hangUp",
-        data:"hangUp"
+        event:"hangup",
+        data:login
     });
     lightOffUsers();
     remoteUser = null;
     buttonsHandler("stopCall");
 }
 
-function lightOffUsers(){
+function lightOffUsers(data){
 
-    // for(i in users){
-    //     document.getElementById(users[i]).style.background ="#f2f2f2";
-    // }
+        // addUser();
+        var list = document.getElementById("usersList");
+        while(list.firstChild != null){
+            list.firstChild.remove();
+        }
+
+        console.log("lightOffUsers, users: "+users);
+        for(i in users){
+            if(users[i] != login){
+                var node = document.createElement("li");
+                var button = document.createElement("button");
+                var textNode = document.createTextNode(users[i]);
+                var remoteUser = users[i];
+                button.id = remoteUser;
+                button.appendChild(textNode);
+                node.appendChild(button);
+                button.onclick = connectRemoteUser;
+                document.getElementById("usersList").appendChild(node);
+            }
+        }
+
+    console.log('lightOffUsers, data ', data);
 }
 
 

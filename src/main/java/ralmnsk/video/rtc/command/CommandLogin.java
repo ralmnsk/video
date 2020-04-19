@@ -202,4 +202,27 @@ public class CommandLogin implements Command {
             }
         });
     }
+
+    //change data in message from user who created call. data:user -> data:remoteUser.
+    public boolean sendEventToRemoteUser(String event, WebSocketSession remoteSession){
+        WebSocketSession session = getSocketHandler().getCurrentSession();
+        if (session != null && session.isOpen()){
+            Map<WebSocketSession, User> sessions = getSocketHandler().getSessions();
+            User user = sessions.get(session);//user of the current session
+            if (user != null && user.getLogin() != null){
+                String userName = user.getLogin();
+                MsgText msg = new MsgText();
+                msg.setEvent(event);
+                msg.setData(userName);
+                TextMessage textMessage = msgToTextMessage(msg);
+                try {
+                    remoteSession.sendMessage(textMessage);
+                    return true;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return false;
+    }
 }

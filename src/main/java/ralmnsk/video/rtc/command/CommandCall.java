@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static ralmnsk.video.rtc.Constants.CALL;
+import static ralmnsk.video.rtc.Constants.HANG_UP;
+
 public class CommandCall extends CommandLogin {
 
     public CommandCall(ObjectMapper objectMapper, ModelMapper modelMapper, UserService userService) {
@@ -24,6 +27,7 @@ public class CommandCall extends CommandLogin {
     public TextMessage execute() {
         WebSocketSession currentSession = getSocketHandler().getCurrentSession();
         Map<WebSocketSession, User> sessions = getSocketHandler().getSessions();
+        Map<WebSocketSession, WebSocketSession> pairs = getSocketHandler().getPairs();
         String message = getMessage().getPayload();
         MsgText msg = null;
         try {
@@ -37,18 +41,25 @@ public class CommandCall extends CommandLogin {
                     .filter(s -> sessions.get(s).getLogin() != null)
                     .filter(s -> sessions.get(s).getLogin().equals(remoteUserName))
                     .collect(Collectors.toList());
-            if(list.size()>0){
+            if(list.size()>0 ){
                 WebSocketSession remoteUserSession = list.get(0);
-                try {
-                    getSocketHandler().getPairs().put(currentSession,remoteUserSession);
-                    getSocketHandler().getPairs().put(remoteUserSession,currentSession);
-                    remoteUserSession.sendMessage(getMessage());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    if ((!pairs.containsKey(currentSession)&&!pairs.containsKey(remoteUserSession))){
+                        pairs.put(currentSession,remoteUserSession);
+                        pairs.put(remoteUserSession,currentSession);
+                        sendEventToRemoteUser(CALL,remoteUserSession);
+                    } else if(pairs.containsKey(currentSession)&&pairs.containsKey(remoteUserSession)){
+                        sendEventToRemoteUser(CALL,remoteUserSession);
+                    }
+                    else {
+                        sendEventToRemoteUser(HANG_UP,currentSession);
+                        return new TextMessage("remote user is busy now");
+                    }
             }
         }
 
         return new TextMessage("CommandCall");
     }
+
+
+
 }
