@@ -14,5 +14,9 @@ public class Constants {
     public final static String KEY = "key";
     public final static String CALL = "call";
     public final static String HANG_UP = "hangup";
+    public final static String REGISTRATION = "registration";
+    public final static String TH_REGISTRATION = "th_registration";
+    public final static String TH_LOGIN = "th_login";
+    public final static String INDEX = "index";
     public static final int RATE = 1000000;
 }

@@ -12,6 +12,7 @@ var remoteUser;
 
 onloadPage();
 
+
 //Message that something happens: connecting to the server, have a call
 function createMsg(msg) {
     var line = document.getElementById("line");

@@ -20,6 +20,7 @@ public class CommandLogout extends CommandLogin {
         Map<WebSocketSession,User> sessions = getSocketHandler().getSessions();
         WebSocketSession currentSession = getSocketHandler().getCurrentSession();
         User user = sessions.get(currentSession);
+        //send updated users list
         if (user != null && user.getLogin() != null){
             String key = user.getKey();
             if (key != null){
@@ -32,6 +33,7 @@ public class CommandLogout extends CommandLogin {
                 sendToAll(getSocketHandler().getSessions(), msgList);
             }
         }
+        //remove closed session
         sessions.remove(currentSession);
         return new TextMessage("logout");
     }

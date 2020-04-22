@@ -1,10 +1,12 @@
 package ralmnsk.video.dao;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -15,9 +17,15 @@ import javax.sql.DataSource;
 public class HibernateConfiguration {
 
     private final SettingsConfiguration settingsConfig;
+    private LocalSessionFactoryBean entityManagerFactory;
 
     public HibernateConfiguration(SettingsConfiguration settingsConfig) {
         this.settingsConfig = settingsConfig;
+    }
+
+    @Autowired
+    public void setEntityManagerFactory(LocalSessionFactoryBean entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     @Bean
@@ -43,12 +51,14 @@ public class HibernateConfiguration {
         return sf;
     }
 
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-        HibernateTransactionManager transactionManager
-                = new HibernateTransactionManager();
-        transactionManager.setSessionFactory(entityManagerFactory().getObject());
-        return transactionManager;
-    }
+//    @Bean
+//    public PlatformTransactionManager transactionManager() {
+////        HibernateTransactionManager transactionManager
+////                = new HibernateTransactionManager();
+////        transactionManager.setSessionFactory(entityManagerFactory().getObject());
+//
+//        JpaTransactionManager
+//        return transactionManager;
+//    }
 
 }

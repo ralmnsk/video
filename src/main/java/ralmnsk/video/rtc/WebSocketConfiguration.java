@@ -2,25 +2,28 @@ package ralmnsk.video.rtc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.*;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import ralmnsk.video.rtc.command.*;
 import ralmnsk.video.rtc.handlers.MessageHandler;
 import ralmnsk.video.service.ServiceConfig;
+import ralmnsk.video.service.UserService;
 
 
 @Configuration
 @EnableWebSocket
+@ComponentScan({"ralmnsk.video.rtc"})
+@Import(ServiceConfig.class)
 public class WebSocketConfiguration implements WebSocketConfigurer {
 
-    private ServiceConfig serviceConfig;
+    private UserService userService;
 
-    public WebSocketConfiguration(ServiceConfig serviceConfig) {
-        this.serviceConfig = serviceConfig;
+    @Autowired
+    public WebSocketConfiguration(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
@@ -58,36 +61,36 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
     @Bean
     @DependsOn("commandLogin")
     public CommandRegistration commandRegistration(){
-        return new CommandRegistration(objectMapper(),modelMapper(), serviceConfig.userService());
+        return new CommandRegistration(objectMapper(),modelMapper(), userService);
     }
 
     @Bean
     public CommandLogin commandLogin(){
-        return new CommandLogin(objectMapper(),modelMapper(),serviceConfig.userService());
+        return new CommandLogin(objectMapper(),modelMapper(),userService);
     }
 
     @Bean
     public CommandUsers commandUsers(){
-        return new CommandUsers(objectMapper(),modelMapper(),serviceConfig.userService());
+        return new CommandUsers(objectMapper(),modelMapper(),userService);
     }
 
     @Bean
     public CommandLogout commandLogout(){
-        return new CommandLogout(objectMapper(),modelMapper(),serviceConfig.userService());
+        return new CommandLogout(objectMapper(),modelMapper(),userService);
     }
 
     @Bean
     public CommandCall commandCall(){
-        return new CommandCall(objectMapper(),modelMapper(),serviceConfig.userService());
+        return new CommandCall(objectMapper(),modelMapper(),userService);
     }
 
     @Bean
     public CommandDefault commandDefault(){
-        return new CommandDefault(objectMapper(),modelMapper(),serviceConfig.userService());
+        return new CommandDefault(objectMapper(),modelMapper(),userService);
     }
 
     @Bean
     public CommandHangUp commandHangUp(){
-        return new CommandHangUp(objectMapper(),modelMapper(),serviceConfig.userService());
+        return new CommandHangUp(objectMapper(),modelMapper(),userService);
     }
 }

@@ -9,8 +9,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import ralmnsk.video.model.User;
 import ralmnsk.video.rtc.command.Command;
 import ralmnsk.video.rtc.handlers.MessageHandler;
-
-import java.io.IOException;
 import java.util.Map;
 
 public class SocketHandler extends TextWebSocketHandler {

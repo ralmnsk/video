@@ -1,9 +1,11 @@
 package ralmnsk.video.dao;
 
+import org.springframework.stereotype.Repository;
 import ralmnsk.video.model.User;
 
 import java.util.Optional;
 
+@Repository
 public class UserDaoDefault implements UserDao{
 
     private final UserRepository repo;
