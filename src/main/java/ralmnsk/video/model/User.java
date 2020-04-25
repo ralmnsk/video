@@ -3,7 +3,7 @@ package ralmnsk.video.model;
 import javax.persistence.*;
 
 
-@Table(name="user")
+@Table(name="users")
 @Entity
 public class User {
 
@@ -23,8 +23,10 @@ public class User {
     private String key;
 
     @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+//    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
     public User() {

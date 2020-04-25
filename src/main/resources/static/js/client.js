@@ -34,6 +34,8 @@ function createConnection(){
         console.log("Connected to the signaling server");
         initialize();
         changeMsg("connected to the signaling server");
+        sendLoginData();
+        console.log("sendLoginData()");
     };
 
     conn.onclose = function () {
@@ -216,6 +218,7 @@ function handleUsers(data){
             var textNode = document.createTextNode(users[i]);
             var remoteUser = users[i];
             button.id = remoteUser;
+            button.className = "btn btn-outline-primary";
             button.appendChild(textNode);
             node.appendChild(button);
             button.onclick = connectRemoteUser;
@@ -238,47 +241,48 @@ var logDiv;
 
     console.log("eventHandler: ", event);
     //when user connected disable an registration, login and enable logout and stop call buttons
-    toRegBtn = document.getElementById("toRegBtn"); //.style.display = view2;
-    toLogBtn = document.getElementById("toLogBtn"); //.style.display = view2;
-    logout = document.getElementById("logout"); //.style.display = view1;
+    // toRegBtn = document.getElementById("toRegBtn"); //.style.display = view2;
+    // toLogBtn = document.getElementById("toLogBtn"); //.style.display = view2;
+    // logout = document.getElementById("logout"); //.style.display = view1;
     btnStop = document.getElementById("btnStop");
-    logDiv = document.getElementById("logDiv");
+    btnStop.className = "btn btn-primary";
+    // logDiv = document.getElementById("logDiv");
 
     switch (event) {
         case "onloadPage":
-                toRegBtn.style.display = "block";
-                toLogBtn.style.display = "block";
-                logout.style.display = "none";
+                // toRegBtn.style.display = "block";
+                // toLogBtn.style.display = "block";
+                // logout.style.display = "none";
                 btnStop.style.display = "none";
             break;
         case "handleUsers":
-                toRegBtn.style.display = "none";
-                toLogBtn.style.display = "none";
-                logout.style.display = "block";
-                logDiv.style.display = "none";
+                // toRegBtn.style.display = "none";
+                // toLogBtn.style.display = "none";
+                // logout.style.display = "block";
+                // logDiv.style.display = "none";
             break;
         case "stopCall":
-                toRegBtn.style.display = "none";
-                toLogBtn.style.display = "none";
-                logout.style.display = "block";
+                // toRegBtn.style.display = "none";
+                // toLogBtn.style.display = "none";
+                // logout.style.display = "block";
                 btnStop.style.display = "none";
             break;
         case "hangup":
-            toRegBtn.style.display = "none";
-            toLogBtn.style.display = "none";
-            logout.style.display = "block";
+            // toRegBtn.style.display = "none";
+            // toLogBtn.style.display = "none";
+            // logout.style.display = "block";
             btnStop.style.display = "none";
             break;
         case "handleCandidate":
-                toRegBtn.style.display = "none";
-                toLogBtn.style.display = "none";
-                logout.style.display = "block";
+                // toRegBtn.style.display = "none";
+                // toLogBtn.style.display = "none";
+                // logout.style.display = "block";
                 btnStop.style.display = "block";
             break;
         case "logout":
-                toRegBtn.style.display = "block";
-                toLogBtn.style.display = "block";
-                logout.style.display = "none";
+                // toRegBtn.style.display = "block";
+                // toLogBtn.style.display = "block";
+                // logout.style.display = "none";
                 btnStop.style.display = "none";
             break;
         case "call":
@@ -390,6 +394,7 @@ function lightOffUsers(data){
                 var remoteUser = users[i];
                 button.id = remoteUser;
                 button.appendChild(textNode);
+                button.className = "btn btn-outline-primary";
                 node.appendChild(button);
                 button.onclick = connectRemoteUser;
                 document.getElementById("usersList").appendChild(node);
@@ -426,8 +431,8 @@ function sendRegistrationData(){
 }
 
 function sendLoginData(){
-    login = document.getElementById("login").value;
-    password = document.getElementById("password").value;
+    login = document.getElementById("log").value;
+    password = document.getElementById("pass").value;
     send({
         event:"login",
         data:{
@@ -482,8 +487,12 @@ function onloadPage(){
     setTimeout(function(){
         createConnection();
         buttonsHandler("onloadPage");
-    },500)
+
+    },500);
+
 };
+
+
 
 //--------------------------------------------------------------------------
 

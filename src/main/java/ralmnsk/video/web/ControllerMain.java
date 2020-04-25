@@ -2,6 +2,7 @@ package ralmnsk.video.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import static ralmnsk.video.rtc.Constants.*;
 
 @Controller
-public class ControllerLogin {
+public class ControllerMain {
+    @Autowired
+    private ApplicationContext context;
 
     private PasswordEncoder encoder;
     private UserService userService;
@@ -39,7 +42,7 @@ public class ControllerLogin {
         this.userDetailsService = userDetailsService;
     }
 
-    public ControllerLogin() {
+    public ControllerMain() {
     }
 
     @ModelAttribute("registrationForm")
@@ -53,8 +56,7 @@ public class ControllerLogin {
         return LOGIN;
     }
 
-//    @PostMapping("/login")
-    @RequestMapping(value="/login", method = RequestMethod.POST)
+    @PostMapping("/login")
     public String login(RegistrationForm form, Model model, HttpServletRequest req){
         User user = form.toUser();
         UserDetails userDetails = null;
@@ -69,12 +71,14 @@ public class ControllerLogin {
                 SecurityContextHolder.getContext()
                         .setAuthentication(new UsernamePasswordAuthenticationToken(userLogged.getLogin(),
                                 userLogged.getPassword(),userDetails.getAuthorities()));
-                req.getSession().setAttribute("user", userLogged);
-                System.out.println("login successful");
-                return INDEX;
+                req.getSession().setAttribute(LOGIN, userLogged.getLogin());
+                req.getSession().setAttribute(PASSWORD, userLogged.getPassword());
+                System.out.println(LOGIN_SUCCESS);
+                model.addAttribute(MESSAGE,LOGIN_SUCCESS);
+                return "redirect:/chat";
             }
         }
-
+            model.addAttribute(MESSAGE,LOGIN_PASS_INCORRECT);
         return LOGIN;
     }
 
@@ -90,7 +94,7 @@ public class ControllerLogin {
                 User userFound = userService.getByLogin(user.getLogin());
                 if (userFound != null &&
                         user.getLogin().equals(userFound.getLogin())) {
-                        model.addAttribute("message","User was created before");
+                        model.addAttribute(MESSAGE,"User was created before");
                     System.out.println("User was created before");
                     return LOGIN;
                 }
@@ -103,5 +107,12 @@ public class ControllerLogin {
     public String index(){
         return INDEX;
     }
+
+    @GetMapping("/chat")
+    public String chat(){
+        return CHAT;
+    }
+
+
 
 }

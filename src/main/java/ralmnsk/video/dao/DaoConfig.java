@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@Import(HibernateConfiguration.class)
+//@Import(HibernateConfiguration.class)
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "ralmnsk.video.dao")
 @ComponentScan

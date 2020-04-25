@@ -10,27 +10,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-@Configuration
-@PropertySource("classpath:application.properties")
+//@Configuration
+//@PropertySource("classpath:application.properties")
 public class SettingsConfiguration {
-
-    @Bean
-    public DataSourceSettings datasourseSettings() {
-        return new DataSourceSettings();
-    }
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
-
-    public Properties hibernateProperties() {
-        try (final InputStream inputStream = new ClassPathResource("application.properties").getInputStream()) {
-            final Properties properties = new Properties();
-            properties.load(inputStream);
-            return properties;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//
+//    @Bean
+//    public DataSourceSettings datasourseSettings() {
+//        return new DataSourceSettings();
+//    }
+//
+//    @Bean
+//    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+//        return new PropertySourcesPlaceholderConfigurer();
+//    }
+//
+//    public Properties hibernateProperties() {
+//        try (final InputStream inputStream = new ClassPathResource("application.properties").getInputStream()) {
+//            final Properties properties = new Properties();
+//            properties.load(inputStream);
+//            return properties;
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }
