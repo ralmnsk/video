@@ -16,6 +16,8 @@ import ralmnsk.video.model.RegistrationForm;
 import ralmnsk.video.model.User;
 import ralmnsk.video.service.UserService;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import static ralmnsk.video.rtc.Constants.*;
 
 @Controller
@@ -57,7 +59,7 @@ public class ControllerMain {
     }
 
     @PostMapping("/login")
-    public String login(RegistrationForm form, Model model, HttpServletRequest req){
+    public String login(@Valid RegistrationForm form, Model model, HttpServletRequest req){
         User user = form.toUser();
         UserDetails userDetails = null;
         try{
@@ -88,7 +90,7 @@ public class ControllerMain {
     }
 
     @PostMapping("/registration")
-    public String registration(RegistrationForm form, Model model){
+    public String registration(@Valid RegistrationForm form, Model model){
             User user =form.toUser(encoder);
             if (user.getLogin() != null && user.getPassword() != null) {
                 User userFound = userService.getByLogin(user.getLogin());
@@ -112,7 +114,5 @@ public class ControllerMain {
     public String chat(){
         return CHAT;
     }
-
-
 
 }

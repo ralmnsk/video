@@ -23,7 +23,7 @@ public class CommandDefault extends CommandLogin {
             WebSocketSession currentSession = getSocketHandler().getCurrentSession();
             if(currentSession != null){
                 WebSocketSession remoteSession = getSocketHandler().getPairs().get(currentSession);
-                if(remoteSession != null && getMessage() != null){
+                if(remoteSession != null && getMessage() != null && remoteSession.isOpen()){
                     try {
                         remoteSession.sendMessage(getMessage());
                     } catch (IOException e) {

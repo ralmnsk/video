@@ -15,7 +15,6 @@ import ralmnsk.video.rtc.WebSocketConfiguration;
 import ralmnsk.video.service.UserService;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -64,6 +63,22 @@ public class CommandLogin implements Command {
         this.message = message;
     }
 
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    public void setModelMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public void setSocketHandler(SocketHandler socketHandler) {
+        this.socketHandler = socketHandler;
+    }
+
     @Override
     public TextMessage execute() {
         WebSocketSession session = config.socketHandler().getCurrentSession();
@@ -87,6 +102,7 @@ public class CommandLogin implements Command {
             String msg = message.getPayload();
             try {
                 msgJson = getObjectMapper().readValue(message.getPayload(), Msg.class);
+                System.out.println("getUser():"+msgJson);
                 UserDto userDto = msgJson.getData();
                 user = getModelMapper().map(userDto,User.class);
             } catch (JsonProcessingException e) {

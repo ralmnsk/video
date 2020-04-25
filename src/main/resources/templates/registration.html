@@ -19,11 +19,33 @@
     <h3><a class="badge badge-primary" th:href="@{/}">Main</a></h3>
     <h3><a class="badge badge-primary" th:href="@{/login}">Login page</a></h3>
     <form class="form-signin" th:action="@{/registration}" method="post" id="registrationForm">
-        <div><label> User Name : <input class="form-control" type="text" name="login" /> </label></div>
-        <div><label> Password: <input class="form-control" type="password" name="password" /> </label></div>
-        <div><label> Address: <input class="form-control" type="text" name="address" /> </label></div>
-        <div><label> Email: <input class="form-control" type="text" name="email" /> </label></div>
-        <div><input class="btn btn-primary" type="submit" value="Register"/></div>
+        <div>
+            <label> User Name : <input class="form-control" type="text" name="login"
+                                        required minlength="2" maxlength="30" pattern="[A-Za-z0-9]{2,30}"
+                                        title="Use A-Z, a-z, 0-9 from two to thirty letters."/>
+            </label>
+        </div>
+        <div>
+            <label> Password: <input class="form-control" type="password" name="password"
+                                      required minlength="2" maxlength="30" pattern="[A-Za-z0-9]{2,30}"
+                                      title="Use A-Z, a-z, 0-9 from two to thirty letters."/>
+            </label>
+        </div>
+        <div>
+            <label> Address: <input class="form-control" type="text" name="address"
+                                    required minlength="2" maxlength="30" pattern="[A-Za-z0-9\s,.]{2,200}"
+                                    title="Use A-Z, a-z, 0-9, , ' ' . from two to two hundred letters."/>
+            </label>
+        </div>
+        <div>
+            <label> Email: <input class="form-control" type="email" name="email"
+                                  required minlength="2" maxlength="40"
+                                  title="Input your email address. example: mymail@mail.com"/>
+            </label>
+        </div>
+        <div>
+            <input class="btn btn-primary" type="submit" value="Register"/>
+        </div>
     </form>
 </div>
 </body>

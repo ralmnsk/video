@@ -4,6 +4,12 @@
     <title>Main</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        .form-signin  input[name="login"]{
+
+
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -20,11 +26,17 @@
         <h3><a class="badge badge-primary" th:href="@{/registration}">Registration page</a></h3>
         <form class="form-signin" th:action="@{/login}" method="post">
             <div>
-                <label> User Name : <input class="form-control" type="text" name="login" id="login"/>
+                <label> User Name :
+                    <input class="form-control" type="text" name="login" id="login"
+                           required minlength="2" maxlength="30" pattern="[A-Za-z0-9]{2,30}"
+                            title="Use A-Z, a-z, 0-9 from two to thirty letters."/>
                 </label>
             </div>
             <div>
-                <label> Password: <input class="form-control" type="password" name="password" id="password"/>
+                <label> Password:
+                    <input class="form-control" type="password" name="password" id="password"
+                           required minlength="2" maxlength="30" pattern="[A-Za-z0-9]{2,30}"
+                           title="Use A-Z, a-z, 0-9 from two to thirty letters."/>
                 </label>
             </div>
             <div>

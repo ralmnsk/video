@@ -28,7 +28,8 @@ function changeMsg(msg){
 //connecting to our signaling server
 
 function createConnection(){
-    conn = new WebSocket('wss://localhost:8081/socket');
+    conn = new WebSocket('ws://localhost:8081/socket');
+    // conn = new WebSocket('wss://app-video-chat.herokuapp.com/socket');
 
     conn.onopen = function() {
         console.log("Connected to the signaling server");

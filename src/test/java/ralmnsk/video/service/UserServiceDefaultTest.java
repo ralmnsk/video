@@ -28,6 +28,9 @@ class UserServiceDefaultTest {
     void setUp(){
         user = new User();
         user.setLogin("login");
+        user.setPassword("noPassword");
+        user.setAddress("address");
+        user.setEmail("email");
         userDao.create(user);
     }
 
@@ -83,6 +86,7 @@ class UserServiceDefaultTest {
     void deletNoExists(){
         User testUser = new User();
         testUser.setLogin("noExists");
+        testUser.setPassword("noPassword");
         testUser.setId(12345L);
         userDao.delete(testUser);
     }

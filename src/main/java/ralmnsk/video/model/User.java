@@ -1,6 +1,8 @@
 package ralmnsk.video.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 
 @Table(name="users")
@@ -8,15 +10,21 @@ import javax.persistence.*;
 public class User {
 
 //    @Column(name="login")
+    @NotBlank(message = "login is mandatory")
+    @Pattern(regexp = "[A-Za-z0-9]{2,30}")
     private String login;
 
 //    @Column(name = "password")
+    @NotBlank(message = "password is mandatory")
+    @Pattern(regexp = "[A-Za-z0-9]{2,30}")
     private String password;
 
 //    @Column(name="address")
+    @NotBlank(message = "address is mandatory")
     private String address;
 
 //    @Column(name="email")
+    @NotBlank(message = "email is mandatory")
     private String email;
 
     @Transient

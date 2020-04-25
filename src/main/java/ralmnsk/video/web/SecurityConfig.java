@@ -34,15 +34,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                     .antMatchers("/registration","/login","/","/logout",
-                            "/static/js/","static/css/")
+                            "/static/js/","static/css/","/error")
                     .permitAll()
                 .and()
                     .authorizeRequests()
                     .antMatchers("/chat")
                     .hasAnyAuthority("USER")
                     .anyRequest().authenticated()
-
-
+//                .and()
+//                    .exceptionHandling()
+//                    .accessDeniedPage("/index.html")
 //                .and()
 //                    .formLogin()
 //                    .loginPage("/login")

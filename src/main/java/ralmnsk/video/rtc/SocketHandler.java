@@ -37,24 +37,30 @@ public class SocketHandler extends TextWebSocketHandler {
         return pairs;
     }
 
+    public void setSessions(Map<WebSocketSession, User> sessions) {
+        this.sessions = sessions;
+    }
+
+    public void setPairs(Map<WebSocketSession, WebSocketSession> pairs) {
+        this.pairs = pairs;
+    }
+
+    public void setMessageHandler(MessageHandler messageHandler) {
+        this.messageHandler = messageHandler;
+    }
+
+    public void setCurrentSession(WebSocketSession currentSession) {
+        this.currentSession = currentSession;
+    }
+
+    public void setConfig(WebSocketConfiguration config) {
+        this.config = config;
+    }
+
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
-//        super.handleTextMessage(session, message);
         currentSession = session;
                 System.out.println("handleTextMessage: "+message.getPayload());
-//                if(sessions.containsKey(session)){
-//                    for(WebSocketSession wsSession:sessions.keySet()){
-//                        if(wsSession.isOpen()&&!session.getId().equals(wsSession.getId())){
-//                            try {
-//                                wsSession.sendMessage(message);
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
-//                } else if (pairs.containsKey(session)){
-//
-//                }
 
         Command command = messageHandler.getCommandByMessage(message);
         command.setMessage(message);
@@ -67,9 +73,6 @@ public class SocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         currentSession = session;
         sessions.put(session,new User());
-//        if(sessions.size()>1){ //when client gets event:start he begins send offer
-//            session.sendMessage(new TextMessage("{\"event\": \"start\",\"data\":\"start\"}"));
-//        }
         currentSession = null;
     }
 
