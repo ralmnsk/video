@@ -158,7 +158,7 @@ function handleOffer(offer) {
 function handleCandidate(candidate) {
     peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
     // countIceCandidate = countIceCandidate + 1;
-    buttonsHandler("handleCandidate");
+    // buttonsHandler("handleCandidate");
     console.log("handleCandidate");
 }
 
@@ -215,7 +215,7 @@ function handleUsers(data){
     for(i in users){
         if(users[i] != login){
             var node = document.createElement("li");
-            var button = document.createElement("button");
+            var button = document.createElement("a");
             var textNode = document.createTextNode(users[i]);
             var remoteUser = users[i];
             button.id = remoteUser;
@@ -226,7 +226,7 @@ function handleUsers(data){
             document.getElementById("usersList").appendChild(node);
         }
     }
-    buttonsHandler("handleUsers");
+    // buttonsHandler("handleUsers");
     changeMsg("You have logged in.");
     }
 }
@@ -245,8 +245,8 @@ var logDiv;
     // toRegBtn = document.getElementById("toRegBtn"); //.style.display = view2;
     // toLogBtn = document.getElementById("toLogBtn"); //.style.display = view2;
     // logout = document.getElementById("logout"); //.style.display = view1;
-    btnStop = document.getElementById("btnStop");
-    btnStop.className = "btn btn-primary";
+    // btnStop = document.getElementById("btnStop");
+    // btnStop.className = "btn btn-primary";
     // logDiv = document.getElementById("logDiv");
 
     switch (event) {
@@ -254,7 +254,7 @@ var logDiv;
                 // toRegBtn.style.display = "block";
                 // toLogBtn.style.display = "block";
                 // logout.style.display = "none";
-                btnStop.style.display = "none";
+                // btnStop.style.display = "none";
             break;
         case "handleUsers":
                 // toRegBtn.style.display = "none";
@@ -266,28 +266,28 @@ var logDiv;
                 // toRegBtn.style.display = "none";
                 // toLogBtn.style.display = "none";
                 // logout.style.display = "block";
-                btnStop.style.display = "none";
+                // btnStop.style.display = "none";
             break;
         case "hangup":
             // toRegBtn.style.display = "none";
             // toLogBtn.style.display = "none";
             // logout.style.display = "block";
-            btnStop.style.display = "none";
+            // btnStop.style.display = "none";
             break;
         case "handleCandidate":
                 // toRegBtn.style.display = "none";
                 // toLogBtn.style.display = "none";
                 // logout.style.display = "block";
-                btnStop.style.display = "block";
+                // btnStop.style.display = "block";
             break;
         case "logout":
                 // toRegBtn.style.display = "block";
                 // toLogBtn.style.display = "block";
                 // logout.style.display = "none";
-                btnStop.style.display = "none";
+                // btnStop.style.display = "none";
             break;
         case "call":
-                btnStop.style.display = "block";
+                // btnStop.style.display = "block";
             break;
         default:
             break;
@@ -303,10 +303,14 @@ function addUser(){
 //choose remote user and make call
 function connectRemoteUser(event) {
     remoteUser = this.id;
-    call();
-    document.getElementById(this.id).style.background = "#FFA500";
-    // document.getElementById("btnStop").display = "block";
-    // document.getElementById("btnStop").disabled = false;
+    // call();
+    document.getElementById(this.id).style.background = "green";
+    var elementRemoteUser = document.getElementById("remoteUser");
+    while(elementRemoteUser.firstChild != null){
+        elementRemoteUser.firstChild.remove();
+    }
+    var textNode = document.createTextNode(remoteUser);
+    elementRemoteUser.appendChild(textNode);
     console.log("connectRemoteUser, this id: "+this.id);
 }
 
@@ -328,7 +332,8 @@ function call() {
             document.getElementById("localVideo").srcObject = stream;
             peerConnection.addTrack(stream.getTracks()[0], stream);
         });
-    buttonsHandler("call");
+    // buttonsHandler("call");
+    on();
     console.log("call(): media track was added and createOffer was made, remoteUser:",remoteUser);
 }
 
@@ -359,10 +364,10 @@ function hangUp(data) {
     document.getElementById("localVideo").remove();
     document.getElementById("remoteVideo").remove();
     videos.innerHTML += "<video id=\"localVideo\" autoplay></video><video id=\"remoteVideo\" autoplay></video>";
-    document.getElementById("btnStop").display = "none";
+    // document.getElementById("btnStop").display = "none";
 
     lightOffUsers(data);
-    buttonsHandler("hangup");
+    // buttonsHandler("hangup");
     console.log("hangUp()");
 }
 
@@ -375,7 +380,7 @@ function stopCall() {
     });
     lightOffUsers();
     remoteUser = null;
-    buttonsHandler("stopCall");
+    // buttonsHandler("stopCall");
 }
 
 function lightOffUsers(data){
@@ -390,12 +395,12 @@ function lightOffUsers(data){
         for(i in users){
             if(users[i] != login){
                 var node = document.createElement("li");
-                var button = document.createElement("button");
+                var button = document.createElement("a");
                 var textNode = document.createTextNode(users[i]);
                 var remoteUser = users[i];
                 button.id = remoteUser;
                 button.appendChild(textNode);
-                button.className = "btn btn-outline-primary";
+                // button.className = "btn btn-outline-primary";
                 node.appendChild(button);
                 button.onclick = connectRemoteUser;
                 document.getElementById("usersList").appendChild(node);
@@ -458,7 +463,7 @@ function logout() {
 
     // conn.close();
 
-    buttonsHandler("logout");
+    // buttonsHandler("logout");
     console.log("logout");
 }
 
@@ -487,29 +492,25 @@ function showElement(element) {
 function onloadPage(){
     setTimeout(function(){
         createConnection();
-        buttonsHandler("onloadPage");
+        // buttonsHandler("onloadPage");
 
     },500);
 
 };
 
 
-
-//--------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------
-// function test() {
-//     peerConnection.createOffer(function(answer) {
-//         send({
-//             event: "answer",
-//             data: answer,
-//         });
-//         peerConnection.setLocalDescription(answer);
-//     }, function(err) {
-//         console.log("error createOffer() :"+err);
-//     });
-//     console.log("createOffer() in test");
-// }
+function logoutChat() {
+    var el = document.getElementById("logoutForm");
+    el.submit();
+}
 
 
 
+function on() {
+    document.getElementById("overlay").style.display = "block";
+}
+
+function off() {
+    stopCall();
+    document.getElementById("overlay").style.display = "none";
+}

@@ -2,74 +2,73 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
     <script src="../static/js/client.js"></script>
-    <style>
-        #regDiv{
-            display: none;
-        }
-        #logDiv{
-            display: none;
-        }
-        #logout{
-            display: none;
-        }
-        #btnStop{
-            display:block;
-        }
-    </style>
+<!--    <script src="../static/js/modal.js"></script>-->
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 <body>
-    <div class="container">
-        <div>
-            <form th:action="@{/logout}" method="post">
-                <input class="btn btn-primary" type="submit" id="out" value="Log out">
-            </form>
-            <input id="log" type="hidden" th:value="${#session.getAttribute('login')}"></input>
-            <input id="pass" type="hidden" th:value="${#session.getAttribute('password')}"></input>
+    <div class="app">
+        <div class="headLine">
+            <div class="headElement">
+                <div id="user" class="name">
+                </div>
+            </div>
+
+            <div class="headElement2">
+                <div class="logout">
+                    <form th:action="@{/logout}" method="post" id="logoutForm">
+<!--                        <input class="btn btn-primary" type="submit" id="out" value="Log out">-->
+                        <i class="fa fa-sign-out" aria-hidden="true" onclick="logoutChat()"></i>
+                    </form>
+                    <input id="log" type="hidden" th:value="${#session.getAttribute('login')}"></input>
+                    <input id="pass" type="hidden" th:value="${#session.getAttribute('password')}"></input>
+                </div>
+            </div>
+
+            <div id="buttons" class="headElement3">
+                <div class="phone">
+                    <div class="phonePic">
+                        <i class="fa fa-phone" onclick="call()" aria-hidden="true"></i>
+                    </div>
+                </div>
+
+                <div class="stopCall">
+                    <div class="stopCallPic">
+                        <i id="btnStop"class="fa fa-pause-circle" onclick="stopCall()" aria-hidden="true"></i>
+<!--                        <button id="btnStop" onclick="stopCall()">stop call</button>-->
+                    </div>
+                </div>
+
+                <div class="remoteUser" id="remoteUser">
+                </div>
+
+            </div>
         </div>
 
-        <div id="user">
-        </div>
-        <div id="usersDiv">
-            <ul id="usersList"></ul>
+        <div class="leftMenu">
+            <div id="usersDiv">
+                <ul id="usersList">
+                    <li><a href="#" >One</a></li>
+                </ul>
+            </div>
+    <!--        <ul class="userList"></ul>-->
+            <div id="line">
+                <h3 id="msg">...</h3>
+            </div>
         </div>
 
-    <!--    <div id="btnDiv">-->
-    <!--        <button id="toRegBtn" onclick="regDiv()">Registration</button>-->
-    <!--        <button id="toLogBtn" onclick="logDiv()">Log in</button>-->
-    <!--        <button id="logout" onclick="logout()">Logout</button>-->
-    <!--    </div>-->
+        <div class="rightMenu">
+            <div id="overlay" onclick="off()">
+                <div id="videos">
+                    <video id="localVideo" autoplay></video>
+                    <video id="remoteVideo" autoplay></video>
+                </div>
+            </div>
+        </div>
 
-    <!--    <div id="regDiv">   &lt;!&ndash;REGISTRATION&ndash;&gt;-->
-    <!--        <input id="loginReg" type="text" placeholder="login"><br>-->
-    <!--        <input id="passwordReg" type="password" placeholder="password"><br>-->
-    <!--        <input id="address" type="text" placeholder="address"><br>-->
-    <!--        <input id="email" type="email" placeholder="email"><br>-->
-    <!--        <button id="regBtn" onclick="sendRegistrationData()">Register</button>-->
-    <!--    </div>-->
-    <!--    <div id="logDiv">  &lt;!&ndash;LOGIN&ndash;&gt;-->
-    <!--        <input id="login" type="text" placeholder="login">-->
-    <!--        <input id="password" type="password" placeholder="password">-->
-    <!--        <button id="loginBtn" onclick="sendLoginData()">Login</button>-->
-    <!--    </div>-->
-        <ul class="userList"></ul>
-        <br>
-        <div id="line">
-            <h3 id="msg">...</h3>
-        </div>
-        <br>
-        <div id="buttons">
-    <!--        <button id="connectServerBtn" onclick="createConnection()">Connect to server</button>-->
-    <!--        <button id="btn" onclick="call()">start call</button>-->
-    <!--        <button id="test" onclick="test()">test</button>-->
-            <button id="btnStop" onclick="stopCall()">stop call</button>
-        </div>
-        <br>
-        <div id="videos">
-            <video id="localVideo" autoplay></video>
-            <video id="remoteVideo" autoplay></video>
-        </div>
     </div>
 </body>
 </html>

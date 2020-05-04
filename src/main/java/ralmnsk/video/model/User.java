@@ -11,12 +11,12 @@ public class User {
 
 //    @Column(name="login")
     @NotBlank(message = "login is mandatory")
-    @Pattern(regexp = "[A-Za-z0-9]{2,30}")
+//    @Pattern(regexp = "[A-Za-z0-9]{2,30}")
     private String login;
 
 //    @Column(name = "password")
     @NotBlank(message = "password is mandatory")
-    @Pattern(regexp = "[A-Za-z0-9]{2,30}")
+//    @Pattern(regexp = "[A-Za-z0-9]{2,30}")
     private String password;
 
 //    @Column(name="address")

@@ -1,0 +1,186 @@
+body, html{
+    background-color:green;
+}
+.app{
+    position: absolute;
+    width: 90%;
+    min-width: 20%;
+    height: 90%;
+    min-height: 20%;
+    background-color: white;
+    transform: translateX(5%) translateY(5%);
+}
+.headLine{
+    position:relative;
+    width:100%;
+    height: 50px;
+    background-color: darkturquoise;
+    vertical-align: middle;
+}
+.headElement{
+    position: relative;
+    height: 46px;
+    width: 200px;
+    /*vertical-align: center;*/
+    text-align: center;
+    /*transform: translateY(1px);*/
+    color: white;
+    border-style: solid;
+    border-color: whitesmoke;
+}
+.headElement2{
+    position: absolute;
+    height: 46px;
+    width: 60px;
+    /*vertical-align: center;*/
+    text-align: center;
+    transform: translateX(202px) translateY(-51px);
+    color: white;
+    border-style: solid;
+    border-color: whitesmoke;
+}
+.headElement3{
+    position: absolute;
+    height: 46px;
+    width: calc(100% - 269px);
+    /*vertical-align: center;*/
+    text-align: center;
+    transform: translateX(264px) translateY(-51px);
+    color: white;
+    border-style: solid;
+    border-color: whitesmoke;
+}
+.phone{
+    position: absolute;
+    height: 46px;
+    width: 60px;
+    /*vertical-align: center;*/
+    text-align: center;
+    transform: translateX(-2px) translateY(-2px);
+    color: white;
+    border-style: solid;
+    border-color: whitesmoke;
+}
+.stopCall{
+    position: absolute;
+    height: 46px;
+    width: 60px;
+    /*vertical-align: center;*/
+    text-align: center;
+    transform: translateX(60px)translateY(-2px);
+    color: white;
+    border-style: solid;
+    border-color: whitesmoke;
+}
+
+.name{
+    position: relative;
+    transform: translateY(50%);
+}
+.logout{
+    position: relative;
+    transform: translateY(50%);
+}
+.stopCallPic{
+    position: relative;
+    transform: translateY(70%);
+}
+.phonePic{
+    position: relative;
+    transform: translateY(50%);
+}
+.leftMenu{
+    position: absolute;
+    width: 200px;
+    height: calc(100% - 54px);
+    background-color: white;
+    border-style: solid;
+    border-color: darkturquoise;
+
+}
+#usersDiv{
+    position: absolute;
+    width: 200px;
+    height: calc(100% - 50px);
+    transform: translateX(-2px) translateY(-4px);
+    background-color: white;
+    border-style: solid;
+    border-color: darkturquoise;
+    overflow-y: auto;
+    z-index: 100;
+}
+#line{
+    position: absolute;
+    width:200px;
+    height: 49px;
+    bottom: 0;
+    background-color: darkturquoise;
+    text-align: center;
+    font-size: 10px;
+}
+#usersList{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#usersList li a {
+    border: 1px solid #ddd;
+    margin-top: -1px; /* Prevent double borders */
+    background-color: #f6f6f6;
+    padding: 12px;
+    text-decoration: none;
+    font-size: 18px;
+    color: black;
+    display: block
+}
+
+#usersList li a:hover:not(.header) {
+    background-color: #eee;
+}
+
+.remoteUser{
+    font-size: 20px;
+    text-align: center;
+    padding: 15px 0;
+}
+
+/*#regDiv{*/
+/*    display: none;*/
+/*}*/
+/*#logDiv{*/
+/*    display: none;*/
+/*}*/
+/*#logout{*/
+/*    display: none;*/
+/*}*/
+/*#btnStop{*/
+/*    display:block;*/
+/*}*/
+
+.rightMenu{
+    position: absolute;
+    width: calc(100% - 209px);
+    height: calc(100% - 200px);
+    background-color: white;
+    border-style: solid;
+    border-color: darkturquoise;
+    left: 203px;
+    top:48px;
+}
+
+
+/*modal*/
+#overlay {
+    position: fixed; /* Sit on top of the page content */
+    display: none; /* Hidden by default */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    z-index: 105; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+}

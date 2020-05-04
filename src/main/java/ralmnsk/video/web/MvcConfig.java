@@ -90,7 +90,10 @@ public class MvcConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/static/js/");
         registry.addResourceHandler("/static/css/**")
                 .addResourceLocations("classpath:/static/css/");
-
+        registry.addResourceHandler("/static/sound/**")
+                .addResourceLocations("classpath:/static/sound/");
+        registry.addResourceHandler("/static/ico/**")
+                .addResourceLocations("classpath:/static/ico/");
     }
 
 //    @Override

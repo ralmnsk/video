@@ -3,6 +3,7 @@ package ralmnsk.video.rtc.command;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import ralmnsk.video.model.MsgText;
@@ -18,7 +19,9 @@ import static ralmnsk.video.rtc.Constants.CALL;
 import static ralmnsk.video.rtc.Constants.HANG_UP;
 
 public class CommandCall extends CommandLogin {
-    private SocketHandler socketHandler = getSocketHandler();
+
+    @Autowired
+    private SocketHandler socketHandler;
 
     public void setSocketHandler(SocketHandler socketHandler) {
         this.socketHandler = socketHandler;
