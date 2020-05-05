@@ -9,6 +9,7 @@ var msg="You have a call";
 var key; //key for accessing to signaling server
 var users; //names of users
 var remoteUser;
+var localStream;
 
 onloadPage();
 
@@ -324,12 +325,13 @@ function call() {
         createOffer();
     navigator.mediaDevices.getUserMedia({
         video: {
-            width: 480,
-            height: 360
+            width: 720,
+            height: 480
         }
     })
         .then(function (stream) {
-            document.getElementById("localVideo").srcObject = stream;
+            // document.getElementById("localVideo").srcObject = stream;
+            localStream = stream;
             peerConnection.addTrack(stream.getTracks()[0], stream);
         });
     // buttonsHandler("call");
@@ -342,28 +344,47 @@ function hangUp(data) {
     document.getElementById("remoteVideo").srcObject = null;
     peerConnection.onicecandidate = null;
     peerConnection.ontrack = null;
-    var stream = document.getElementById("localVideo").srcObject;
-    if(stream != null){
-        stream.stop = function (){
+    // var stream = document.getElementById("localVideo").srcObject;
+    if(localStream != null){
+        localStream.stop = function (){
             this.getTracks().forEach(function(track) { track.stop(); });
         };
-        stream.stop();
+        localStream.stop();
     }else{
         return;
-        // let tracks = peerConnection.getTracks();
-        // for (i in tracks){
-        //     tracks[i].stop();
-        // }
+    //     // let tracks = peerConnection.getTracks();
+    //     // for (i in tracks){
+    //     //     tracks[i].stop();
+    //     // }
     }
     countIceCandidate = 0;
     countCalls = 0;
     peerConnection.close();
     initialize();
 
+
+//     navigator.mediaDevices.getUserMedia({audio:true,video:true})
+//         .then(stream => {
+//             window.localStream = stream;
+//         })
+//         .catch( (err) =>{
+//             console.log(err);
+//         });
+// // later you can do below
+// // stop both video and audio
+//     localStream.getTracks().forEach( (track) => {
+//         track.stop();
+//     });
+// // stop only audio
+//     localStream.getAudioTracks()[0].stop();
+// // stop only video
+//     localStream.getVideoTracks()[0].stop();
+
     var videos = document.getElementById("videos");
-    document.getElementById("localVideo").remove();
+    // document.getElementById("localVideo").remove();
     document.getElementById("remoteVideo").remove();
-    videos.innerHTML += "<video id=\"localVideo\" autoplay></video><video id=\"remoteVideo\" autoplay></video>";
+    // videos.innerHTML += "<video id=\"localVideo\" autoplay></video><video id=\"remoteVideo\" autoplay></video>";
+    videos.innerHTML += "<video id=\"remoteVideo\" autoplay></video>";
     // document.getElementById("btnStop").display = "none";
 
     lightOffUsers(data);
