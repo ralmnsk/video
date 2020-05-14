@@ -7,11 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import ralmnsk.video.dto.UserDto;
-import ralmnsk.video.model.Msg;
-import ralmnsk.video.model.MsgText;
-import ralmnsk.video.model.User;
+import ralmnsk.video.model.*;
 import ralmnsk.video.rtc.SocketHandler;
 import ralmnsk.video.rtc.WebSocketConfiguration;
+import ralmnsk.video.service.ChatService;
 import ralmnsk.video.service.UserService;
 
 import java.io.IOException;
@@ -26,6 +25,9 @@ public class CommandLogin implements Command {
     private ModelMapper modelMapper;
     private UserService userService;
     private TextMessage message;
+
+    @Autowired
+    private ChatService chatService;
 
     @Autowired
     private WebSocketConfiguration config;
@@ -240,5 +242,57 @@ public class CommandLogin implements Command {
             }
         }
         return false;
+    }
+
+    public String getTextMessageData(TextMessage message){
+        String data = NOTHING;
+        if (message != null){
+            try {
+                MsgText msg = getObjectMapper().readValue(message.getPayload(), MsgText.class);
+                data = msg.getData();
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }
+        return data;
+    }
+
+    public User getCurrentUser(){
+        User user = getSocketHandler().getSessions().get(getSocketHandler().getCurrentSession());
+        if (user != null){
+            return getUserService().getByLogin(user.getLogin());
+        }
+        return null;
+    }
+
+    public boolean isExistChat(User first, User second){
+        List<Chat> firstChats = chatService.getChats(first);
+//            List<Chat> secondChats = chatService.getChats(second);
+        firstChats = firstChats
+                .stream()
+                .filter(c->c.getType()
+                        .equals(ChatType.P2P))
+                .filter(c->c.getUsers().stream()
+                        .filter(u->u.getLogin().equals(second.getLogin()))
+                        .count()>0)
+                .collect(Collectors.toList());
+        if(!firstChats.isEmpty()){
+            return true;
+        }
+        return false;
+    }
+
+    public void createP2PChat(User currentUser, User remoteUser){
+        Chat chat = new Chat();
+        chat.setType(ChatType.P2P);
+        chat.getUsers().add(remoteUser);
+        chat.getUsers().add(currentUser);
+
+        remoteUser.getChats().add(chat);
+        currentUser.getChats().add(chat);
+
+        chatService.create(chat);
+        getUserService().update(currentUser);
+        getUserService().update(remoteUser);
     }
 }

@@ -1,14 +1,12 @@
 package ralmnsk.video.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ralmnsk.video.dao.UserDao;
 import ralmnsk.video.model.User;
-import ralmnsk.video.model.UserPrincipal;
+
+import java.util.List;
 
 @Service
 public class UserServiceDefault implements UserService{
@@ -54,5 +52,10 @@ public class UserServiceDefault implements UserService{
     public boolean isRegistered(User user) {
         User foundUser = userDao.getByLogin(user.getLogin());
         return foundUser != null;
+    }
+
+    @Override
+    public List<User> search(String find) {
+        return userDao.search(find);
     }
 }

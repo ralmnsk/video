@@ -3,6 +3,7 @@ package ralmnsk.video.dao;
 import org.springframework.stereotype.Repository;
 import ralmnsk.video.model.User;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -23,6 +24,9 @@ public class UserDaoDefault implements UserDao{
                 if(savedUser != null){
                     return true;
                 }
+            } else if (byLoginUser != null){
+                Long id = repo.getByLogin(user.getLogin()).getId();
+                user.setId(id);
             }
         }
         return false;
@@ -46,13 +50,23 @@ public class UserDaoDefault implements UserDao{
 
     @Override
     public boolean update(User user) {
-        User updatedUser = repo.save(user);
-        return updatedUser != null ;
+        try {
+            User updatedUser = repo.save(user);
+        } catch (Exception e){
+            System.out.println("exception happened during update operation "+ e);
+            return false;
+        }
+            return true;
     }
 
     @Override
     public boolean delete(User user) {
         repo.delete(user);
         return repo.findById(user.getId()).isPresent();
+    }
+
+    @Override
+    public List<User> search(String find) {
+        return repo.search(find);
     }
 }

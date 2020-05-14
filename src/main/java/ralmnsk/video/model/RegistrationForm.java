@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 public class RegistrationForm {
 //    @NotNull
 //    @Size(min=2,max=30)
-    @Pattern(regexp = "[A-Za-z0-9]{2,30}", message = "This is an invalid login")
+    @Pattern(regexp = "[A-Za-z]{2,30}", message = "This is an invalid login")
     private String login;
 //    @NotNull
 //    @Size(min=2,max=30)

@@ -13,6 +13,7 @@ body, html{
 .headLine{
     position:relative;
     width:100%;
+    min-width: 50%;
     height: 50px;
     background-color: darkturquoise;
     vertical-align: middle;
@@ -91,12 +92,39 @@ body, html{
 }
 .leftMenu{
     position: absolute;
+    bottom: 0%;
     width: 200px;
-    height: calc(100% - 54px);
+    height: calc(100% - 56px - 256px);
     background-color: white;
     border-style: solid;
     border-color: darkturquoise;
-
+}
+.leftMiddleMenu{
+    position: absolute;
+    width: 200px;
+    top: 200px;
+    height: 102px;
+    border-style: solid;
+    border-color: green;
+    z-index: 101;
+    overflow-y: auto;
+}
+.searchPanel{
+    position: absolute;
+    top: 48px;
+    width: 200px;
+    height: 150px;
+    background-color: white;
+    border-style: solid;
+    border-color: red;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#search{
+    width: 100%;
+    font-size: 18px;
+    padding: 11px;
+    border: 1px solid #ddd;
 }
 #usersDiv{
     position: absolute;
@@ -139,12 +167,57 @@ body, html{
     background-color: #eee;
 }
 
+#searchMenu{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+#searchMenu li a {
+    border: 1px solid #ddd;
+    margin-top: -1px; /* Prevent double borders */
+    background-color: #f6f6f6;
+    padding: 7px;
+    text-decoration: none;
+    font-size: 18px;
+    color: black;
+    display: block
+}
+
+#searchMenu li a:hover:not(.header) {
+    background-color: #eee;
+}
+
 .remoteUser{
     font-size: 20px;
-    text-align: center;
+    /*text-align: left;*/
+    transform: translateX(150px);
+    float:left;
     padding: 15px 0;
 }
 
+.remoteUserPanel{
+    position: absolute;
+    transform: translateX(0px);
+    height: 50px;
+    border-style: solid;
+    border-color: red;
+    top: -2px;
+    right: -3px;
+    width: calc(100% - 125px);
+    min-width: 150px;
+    /*text-align: right;*/
+}
+#addRemoteUser{
+    transform:  translateX(-180px) translateY(10px);
+    float: right;
+    display: none;
+}
+
+#removeRemoteUser{
+    transform: translateX(-5px) translateY(10px);
+    float: right;
+    display: none;
+}
 /*#regDiv{*/
 /*    display: none;*/
 /*}*/
@@ -184,3 +257,4 @@ body, html{
     z-index: 105; /* Specify a stack order in case you're using a different order for other elements */
     cursor: pointer; /* Add a pointer on hover */
 }
+

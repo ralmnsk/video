@@ -98,11 +98,12 @@ public class ControllerMain {
                         user.getLogin().equals(userFound.getLogin())) {
                         model.addAttribute(MESSAGE,"User was created before");
                     System.out.println("User was created before");
-                    return LOGIN;
+                    return REGISTRATION;
                 }
                 userService.create(user);
+                model.addAttribute(MESSAGE,"User " + user.getLogin() + " was created successful");
             }
-        return REGISTRATION;
+        return LOGIN;
     }
 
     @GetMapping("/")

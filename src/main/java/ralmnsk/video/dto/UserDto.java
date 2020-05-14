@@ -1,6 +1,11 @@
 package ralmnsk.video.dto;
 
 
+import ralmnsk.video.model.Chat;
+import ralmnsk.video.model.ChatMessage;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class UserDto {
     private String login;
@@ -9,6 +14,8 @@ public class UserDto {
     private String email;
     private String key;
     private Long id;
+    private Set<Chat> chats = new HashSet<>();
+    private Set<ChatMessage> messages = new HashSet<>();
 
     public UserDto() {
     }
@@ -59,5 +66,21 @@ public class UserDto {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public Set<Chat> getChats() {
+        return chats;
+    }
+
+    public void setChats(Set<Chat> chats) {
+        this.chats = chats;
+    }
+
+    public Set<ChatMessage> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(Set<ChatMessage> messages) {
+        this.messages = messages;
     }
 }

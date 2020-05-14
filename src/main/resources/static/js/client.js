@@ -8,8 +8,10 @@ var msgPoints = "...";
 var msg="You have a call";
 var key; //key for accessing to signaling server
 var users; //names of users
+var chats;
 var remoteUser;
 var localStream;
+var foundUsers;
 
 onloadPage();
 
@@ -72,8 +74,11 @@ function createConnection(){
             case "key":
                 handleKey(data);
                 break;
-            case "users":
-                handleUsers(data);
+            case "chats":
+                handleChats(data);
+                break;
+            case "find":
+                handleFind(data);
                 break;
             default:
                 break;
@@ -189,14 +194,14 @@ function handleKey(data){
     key = data.valueOf();
     console.log('key: '+data.valueOf());
     send({
-        event:"users",
+        event:"chats",
         data:login,
         key: key
     });
 }
 
-//handleUsers starts after successful registration
-function handleUsers(data){
+//handleChats starts after successful registration
+function handleChats(data){
     if(login != null){
 
     addUser();
@@ -204,33 +209,91 @@ function handleUsers(data){
     while(list.firstChild != null){
         list.firstChild.remove();
     }
-    // data = "{" + data.substring(0,data.length)+"}";
-    // console.log("handleUsers, data: "+data);
     try {
-        users = JSON.parse(data);
+        chats = JSON.parse(data);
     } catch(error){
         console.log(error);
-        users = data;
+        chats = data;
     }
-    console.log("handleUsers, users: "+users);
-    for(i in users){
-        if(users[i] != login){
-            var node = document.createElement("li");
-            var button = document.createElement("a");
-            var textNode = document.createTextNode(users[i]);
-            var remoteUser = users[i];
-            button.id = remoteUser;
-            button.className = "btn btn-outline-primary";
+    chats = new Map(Object.entries(chats));
+    console.log("handleChats, users: "+chats);
+    for(let chat of chats.keys()){
+        if(chat != login){
+            let node = document.createElement("li");
+            let button = document.createElement("a");
+            let textNode = document.createTextNode(chat);
+            button.id = chat;
+
             button.appendChild(textNode);
             node.appendChild(button);
             button.onclick = connectRemoteUser;
             document.getElementById("usersList").appendChild(node);
         }
     }
-    // buttonsHandler("handleUsers");
     changeMsg("You have logged in.");
     }
 }
+
+//handle find: users that were searched
+function handleFind(data){
+    let ul = document.getElementById("searchMenu");
+    while(ul.firstChild != null){
+        ul.firstChild.remove();
+    }
+
+    try {
+        foundUsers = JSON.parse(data);
+        console.log("handleFind(), foundUsers: " + foundUsers);
+
+
+        var li, a, i, j;
+        let input = document.getElementById("search");
+        let filter = input.value.toUpperCase();
+        // ul = document.getElementById("searchMenu");
+
+        for (j in foundUsers){
+            let node = document.createElement("li");
+            let button = document.createElement("a");
+            let textNode = document.createTextNode(foundUsers[j]);
+            button.id =  foundUsers[j];
+            button.onclick = function(){
+                let ul =document.getElementById("searchMenu");
+
+                for (let k = 0; k < foundUsers.length; k++){
+                    document.getElementById(foundUsers[k]).style.background = "#f6f6f6";
+                }
+                buttonsHandler("find");
+                remoteUser = this.id;
+                document.getElementById(this.id).style.background = "green";
+                //line where remote user name is written
+                let elementRemoteUser = document.getElementById("remoteUser");
+                while(elementRemoteUser.firstChild != null){
+                    elementRemoteUser.firstChild.remove();
+                }
+                let textNode = document.createTextNode(remoteUser);
+                elementRemoteUser.appendChild(textNode);
+            };
+            console.log("handleFind(), found user: " + foundUsers[j]);
+            // button.className = "btn btn-outline-primary";
+            button.appendChild(textNode);
+            node.appendChild(button);
+            ul.appendChild(node);
+        }
+
+        li = ul.getElementsByTagName("li");
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("a")[0];
+            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    } catch(error){
+        console.log(error);
+    }
+}
+
 
 //manage buttons
 
@@ -240,15 +303,13 @@ var toLogBtn;
 var logout;
 var btnStop;
 var logDiv;
+var addUser;
+var removeUser;
 
     console.log("eventHandler: ", event);
-    //when user connected disable an registration, login and enable logout and stop call buttons
-    // toRegBtn = document.getElementById("toRegBtn"); //.style.display = view2;
-    // toLogBtn = document.getElementById("toLogBtn"); //.style.display = view2;
-    // logout = document.getElementById("logout"); //.style.display = view1;
-    // btnStop = document.getElementById("btnStop");
+    addUser = document.getElementById("addRemoteUser");
+    removeUser = document.getElementById("removeRemoteUser");
     // btnStop.className = "btn btn-primary";
-    // logDiv = document.getElementById("logDiv");
 
     switch (event) {
         case "onloadPage":
@@ -256,12 +317,6 @@ var logDiv;
                 // toLogBtn.style.display = "block";
                 // logout.style.display = "none";
                 // btnStop.style.display = "none";
-            break;
-        case "handleUsers":
-                // toRegBtn.style.display = "none";
-                // toLogBtn.style.display = "none";
-                // logout.style.display = "block";
-                // logDiv.style.display = "none";
             break;
         case "stopCall":
                 // toRegBtn.style.display = "none";
@@ -290,7 +345,17 @@ var logDiv;
         case "call":
                 // btnStop.style.display = "block";
             break;
+        case "find":
+            addUser.style.display = "block";
+            removeUser.style.display = "block";
+            break;
+        case "sendAddRemoteUser":
+            addUser.style.display = "none";
+            removeUser.style.display = "none";
+            break;
         default:
+            addUser.style.display = "none";
+            removeUser.style.display = "none";
             break;
     }
 }
@@ -303,8 +368,10 @@ function addUser(){
 // call and hung up commands ----------------------------------------------------------------
 //choose remote user and make call
 function connectRemoteUser(event) {
+    clearSearchPanel();
     remoteUser = this.id;
     // call();
+    lightOffUsers();
     document.getElementById(this.id).style.background = "green";
     var elementRemoteUser = document.getElementById("remoteUser");
     while(elementRemoteUser.firstChild != null){
@@ -312,7 +379,7 @@ function connectRemoteUser(event) {
     }
     var textNode = document.createTextNode(remoteUser);
     elementRemoteUser.appendChild(textNode);
-    console.log("connectRemoteUser, this id: "+this.id);
+    console.log("connectRemoteUser, this id: "+remoteUser);
 }
 
 
@@ -363,32 +430,13 @@ function hangUp(data) {
     initialize();
 
 
-//     navigator.mediaDevices.getUserMedia({audio:true,video:true})
-//         .then(stream => {
-//             window.localStream = stream;
-//         })
-//         .catch( (err) =>{
-//             console.log(err);
-//         });
-// // later you can do below
-// // stop both video and audio
-//     localStream.getTracks().forEach( (track) => {
-//         track.stop();
-//     });
-// // stop only audio
-//     localStream.getAudioTracks()[0].stop();
-// // stop only video
-//     localStream.getVideoTracks()[0].stop();
-
     var videos = document.getElementById("videos");
     // document.getElementById("localVideo").remove();
     document.getElementById("remoteVideo").remove();
     // videos.innerHTML += "<video id=\"localVideo\" autoplay></video><video id=\"remoteVideo\" autoplay></video>";
     videos.innerHTML += "<video id=\"remoteVideo\" autoplay></video>";
-    // document.getElementById("btnStop").display = "none";
 
     lightOffUsers(data);
-    // buttonsHandler("hangup");
     console.log("hangUp()");
 }
 
@@ -411,23 +459,21 @@ function lightOffUsers(data){
         while(list.firstChild != null){
             list.firstChild.remove();
         }
-
-        console.log("lightOffUsers, users: "+users);
-        for(i in users){
-            if(users[i] != login){
+        // chats = new Map(Object.entries(chats));
+        console.log("lightOffUsers, chats: "+chats);
+        for(let chat of chats.keys()){
+            if(chat != login){
                 var node = document.createElement("li");
                 var button = document.createElement("a");
-                var textNode = document.createTextNode(users[i]);
-                var remoteUser = users[i];
-                button.id = remoteUser;
+                var textNode = document.createTextNode(chat);
+                button.id = chat;
+
                 button.appendChild(textNode);
-                // button.className = "btn btn-outline-primary";
                 node.appendChild(button);
                 button.onclick = connectRemoteUser;
                 document.getElementById("usersList").appendChild(node);
             }
         }
-
     console.log('lightOffUsers, data ', data);
 }
 
@@ -482,9 +528,6 @@ function logout() {
     document.getElementById("msg").innerText = "You've logged out. The connection was closed.";
     document.getElementById("user").innerText = null;
 
-    // conn.close();
-
-    // buttonsHandler("logout");
     console.log("logout");
 }
 
@@ -513,7 +556,7 @@ function showElement(element) {
 function onloadPage(){
     setTimeout(function(){
         createConnection();
-        // buttonsHandler("onloadPage");
+        // buttonsHandler();
 
     },500);
 
@@ -526,7 +569,7 @@ function logoutChat() {
 }
 
 
-
+// on and off overlay screen
 function on() {
     document.getElementById("overlay").style.display = "block";
 }
@@ -534,4 +577,42 @@ function on() {
 function off() {
     stopCall();
     document.getElementById("overlay").style.display = "none";
+}
+
+//search panel function -----------------------------------------------------
+
+function search() {
+    lightOffUsers();
+    var input, filter;
+    input = document.getElementById("search");
+    filter = input.value.toUpperCase();
+    if(filter.length > 2){
+        send({
+            event : "find",
+            data : filter
+        });
+    }
+    buttonsHandler("sendAddRemoteUser");
+    console.log("search(): "+ input.value);
+}
+
+function clearSearchPanel(){
+    let list = document.getElementById("searchMenu");
+    while(list.firstChild != null){
+        list.firstChild.remove();
+    }
+    let search = document.getElementById("search");
+    search.value = "";
+    buttonsHandler("sendAddRemoteUser");
+    console.log("clearSearchPanel()");
+}
+
+function sendAddRemoteUser() {
+
+        send({
+            event : "add",
+            data : remoteUser
+        });
+        buttonsHandler("sendAddRemoteUser")
+    console.log("sendAddRemoteUser(): add"+ remoteUser);
 }

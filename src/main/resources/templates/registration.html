@@ -21,8 +21,8 @@
     <form class="form-signin" th:action="@{/registration}" method="post" id="registrationForm">
         <div>
             <label> User Name : <input class="form-control" type="text" name="login"
-                                        required minlength="2" maxlength="30" pattern="[A-Za-z0-9]{2,30}"
-                                        title="Use A-Z, a-z, 0-9 from two to thirty letters."/>
+                                        required minlength="2" maxlength="30" pattern="[A-Za-z]{2,30}"
+                                        title="Use A-Z, a-z from two to thirty letters."/>
             </label>
         </div>
         <div>

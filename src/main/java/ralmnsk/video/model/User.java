@@ -3,6 +3,8 @@ package ralmnsk.video.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Table(name="users")
@@ -11,7 +13,7 @@ public class User {
 
 //    @Column(name="login")
     @NotBlank(message = "login is mandatory")
-//    @Pattern(regexp = "[A-Za-z0-9]{2,30}")
+    @Pattern(regexp = "[A-Za-z]{2,30}")
     private String login;
 
 //    @Column(name = "password")
@@ -31,11 +33,18 @@ public class User {
     private String key;
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "id", updatable = false, nullable = false)
+    @Column(unique = true)
     private Long id;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="user_chat", joinColumns = {@JoinColumn(name = "user_id")},
+    inverseJoinColumns = {@JoinColumn(name = "chat_id")})
+
+    private Set<Chat> chats = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<ChatMessage> messages = new HashSet<>();
 
     public User() {
     }
@@ -86,5 +95,21 @@ public class User {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public Set<Chat> getChats() {
+        return chats;
+    }
+
+    public void setChats(Set<Chat> chats) {
+        this.chats = chats;
+    }
+
+    public Set<ChatMessage> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(Set<ChatMessage> messages) {
+        this.messages = messages;
     }
 }

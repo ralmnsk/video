@@ -70,8 +70,8 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
     }
 
     @Bean
-    public CommandUsers commandUsers(){
-        return new CommandUsers(objectMapper(),modelMapper(),userService);
+    public CommandChats commandChats(){
+        return new CommandChats(objectMapper(),modelMapper(),userService);
     }
 
     @Bean
@@ -92,5 +92,15 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
     @Bean
     public CommandHangUp commandHangUp(){
         return new CommandHangUp(objectMapper(),modelMapper(),userService);
+    }
+
+    @Bean
+    public CommandFind commandFind(){
+        return new CommandFind(objectMapper(),modelMapper(),userService);
+    }
+
+    @Bean
+    public CommandAdd commandAdd(){
+        return new CommandAdd(objectMapper(),modelMapper(),userService);
     }
 }

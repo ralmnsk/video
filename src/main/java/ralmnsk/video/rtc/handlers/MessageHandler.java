@@ -27,14 +27,20 @@ public class MessageHandler {
                 case LOGIN:
                     command = config.commandLogin();
                     break;
-                case USERS:
-                    command = config.commandUsers();
+                case CHATS:
+                    command = config.commandChats();
                     break;
                 case CALL:
                     command = config.commandCall();
                     break;
                 case HANG_UP:
                     command = config.commandHangUp();
+                    break;
+                case FIND:
+                    command = config.commandFind();
+                    break;
+                case ADD:
+                    command = config.commandAdd();
                     break;
                 default:
                     break;

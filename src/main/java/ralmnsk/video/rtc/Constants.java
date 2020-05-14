@@ -23,5 +23,9 @@ public class Constants {
     public final static String CHAT = "chat";
     public final static String USER = "user";
     public final static String PASSWORD = "password";
+    public final static String ADD = "add";
+    public final static String FIND = "find";
+    public final static String CHATS = "chats";
+    public final static String PERCENT = "%";
     public static final int RATE = 1000000;
 }
