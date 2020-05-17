@@ -319,24 +319,19 @@ var btnStop;
 var logDiv;
 var addUser;
 var removeUser;
+var msgBtn;
 
     console.log("eventHandler: ", event);
     addUser = document.getElementById("addRemoteUser");
     removeUser = document.getElementById("removeRemoteUser");
-    // btnStop.className = "btn btn-primary";
+    msgBtn = document.getElementById("msgBtn");
 
     switch (event) {
         case "onloadPage":
-                // toRegBtn.style.display = "block";
-                // toLogBtn.style.display = "block";
-                // logout.style.display = "none";
-                // btnStop.style.display = "none";
+            msgBtn.disabled = true;
             break;
         case "stopCall":
-                // toRegBtn.style.display = "none";
-                // toLogBtn.style.display = "none";
-                // logout.style.display = "block";
-                // btnStop.style.display = "none";
+            removeUser.style.display = "none";
             break;
         case "hangup":
             // toRegBtn.style.display = "none";
@@ -363,13 +358,15 @@ var removeUser;
             addUser.style.display = "block";
             // removeUser.style.display = "block";
             break;
-        case "add":
+        case "addChatUserBtn":
             addUser.style.display = "none";
             removeUser.style.display = "none";
+            msgBtn.disabled = true;
             break;
-        case "remove":
+        case "removeBtnActiveUser":
             addUser.style.display = "none";
             removeUser.style.display = "block";
+            msgBtn.disabled = false;
             break;
         default:
             addUser.style.display = "none";
@@ -417,7 +414,7 @@ function connectRemoteUser(event) {
     clearRemoteUser();
     var textNode = document.createTextNode(remoteUser);
     elementRemoteUser.appendChild(textNode);
-    buttonsHandler("remove");
+    buttonsHandler("removeBtnActiveUser");
     console.log("connectRemoteUser, this id: "+remoteUser);
 }
 
@@ -490,6 +487,7 @@ function stopCall() {
     ring.pause();
     clearRemoteUser();
     removePhonePic();
+    buttonsHandler("stopCall");
     hangUp();
     send({
         event:"hangup",
@@ -606,7 +604,7 @@ function showElement(element) {
 function onloadPage(){
     setTimeout(function(){
         createConnection();
-        // buttonsHandler();
+        buttonsHandler("onloadPage")
 
     },250);
 
@@ -643,7 +641,7 @@ function search() {
             data : filter
         });
     }
-    buttonsHandler("add");
+    buttonsHandler("addChatUserBtn");
     console.log("search(): "+ input.value);
 }
 
