@@ -103,4 +103,9 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
     public CommandAdd commandAdd(){
         return new CommandAdd(objectMapper(),modelMapper(),userService);
     }
+
+    @Bean
+    public CommandRemove commandRemove(){
+        return new CommandRemove(objectMapper(),modelMapper(),userService);
+    }
 }

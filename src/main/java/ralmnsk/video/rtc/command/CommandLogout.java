@@ -29,8 +29,8 @@ public class CommandLogout extends CommandLogin {
                         .filter(k->sessions.get(k).getLogin()!=null)
                         .filter(k->sessions.get(k).getLogin().equals(user.getLogin()))
                         .forEach(k->sessions.remove(k));
-                TextMessage msgList = getUserList(key);
-                sendToAll(getSocketHandler().getSessions(), msgList);
+//                TextMessage msgList = getUserList(key);
+//                sendToAll(getSocketHandler().getSessions(), msgList);
             }
         }
         //remove closed session

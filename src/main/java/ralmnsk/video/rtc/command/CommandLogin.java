@@ -14,6 +14,7 @@ import ralmnsk.video.service.ChatService;
 import ralmnsk.video.service.UserService;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -178,26 +179,26 @@ public class CommandLogin implements Command {
         return users!=null && users.size()>0;
     }
 
-    public TextMessage getUserList(String key){
-//            Collection<String> users = getUsersHandler().getKeys().values();
-            List<String> users = getSocketHandler().getSessions().values()
-                    .stream().filter(u->u.getLogin() != null)
-                    .map(u->u.getLogin()).collect(Collectors.toList());
-            String usersJson = NOTHING;
-            String msgJson = NOTHING;
-            MsgText msg = new MsgText();
-            msg.setEvent(USERS);
-            msg.setKey(key);
-        try {
-            usersJson = getObjectMapper().writeValueAsString(users);
-            msg.setData(usersJson);
-            msgJson = getObjectMapper().writeValueAsString(msg);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        TextMessage textMessage = new TextMessage(msgJson);
-        return textMessage;
-    }
+//    public TextMessage getUserList(String key){
+////            Collection<String> users = getUsersHandler().getKeys().values();
+//            List<String> users = getSocketHandler().getSessions().values()
+//                    .stream().filter(u->u.getLogin() != null)
+//                    .map(u->u.getLogin()).collect(Collectors.toList());
+//            String usersJson = NOTHING;
+//            String msgJson = NOTHING;
+//            MsgText msg = new MsgText();
+//            msg.setEvent(USERS);
+//            msg.setKey(key);
+//        try {
+//            usersJson = getObjectMapper().writeValueAsString(users);
+//            msg.setData(usersJson);
+//            msgJson = getObjectMapper().writeValueAsString(msg);
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+//        TextMessage textMessage = new TextMessage(msgJson);
+//        return textMessage;
+//    }
 
     public void sendToCurrentSession(WebSocketSession session, TextMessage backTextMessage){
         try {
@@ -294,5 +295,36 @@ public class CommandLogin implements Command {
         chatService.create(chat);
         getUserService().update(currentUser);
         getUserService().update(remoteUser);
+    }
+
+    public TextMessage findChatsByUserLogin(User user){
+        String msgJson =NOTHING;
+        List<Chat> chats = chatService.getChats(user);
+        Map<String,String> map = new HashMap<>();//name chat, id chat
+        for(Chat chat:chats){
+            if (chat.getType().equals(ChatType.P2P)){
+                for (User u: chat.getUsers()){
+                    if(!u.getLogin().equals(user.getLogin())){
+                        map.put(u.getLogin(),chat.getChatId().toString());
+                    }
+                }
+            } else {
+                map.put(chat.getChatId().toString(),chat.getChatId().toString());
+            }
+        }
+
+        if (!map.isEmpty()) {
+            try {
+                String chatsJson = getObjectMapper().writeValueAsString(map);
+                MsgText msg = new MsgText();
+                msg.setEvent(CHATS);//users = chats
+                msg.setData(chatsJson);
+                msgJson = getObjectMapper().writeValueAsString(msg);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }
+        TextMessage textMessage = new TextMessage(msgJson);
+        return textMessage;
     }
 }

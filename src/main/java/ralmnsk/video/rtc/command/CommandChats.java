@@ -59,34 +59,5 @@ public class CommandChats extends CommandLogin {
         return errorMsg;
     }
 
-    private TextMessage findChatsByUserLogin(User user){
-            String msgJson =NOTHING;
-            List<Chat> chats = chatService.getChats(user);
-            Map<String,String> map = new HashMap<>();//name chat, id chat
-            for(Chat chat:chats){
-                if (chat.getType().equals(ChatType.P2P)){
-                    for (User u: chat.getUsers()){
-                        if(!u.getLogin().equals(user.getLogin())){
-                            map.put(u.getLogin(),chat.getChatId().toString());
-                        }
-                    }
-                } else {
-                    map.put(chat.getChatId().toString(),chat.getChatId().toString());
-                }
-            }
 
-        if (!map.isEmpty()) {
-                    try {
-                        String chatsJson = getObjectMapper().writeValueAsString(map);
-                        MsgText msg = new MsgText();
-                        msg.setEvent(CHATS);//users = chats
-                        msg.setData(chatsJson);
-                        msgJson = getObjectMapper().writeValueAsString(msg);
-                    } catch (JsonProcessingException e) {
-                        e.printStackTrace();
-                    }
-                }
-            TextMessage textMessage = new TextMessage(msgJson);
-        return textMessage;
-    }
 }

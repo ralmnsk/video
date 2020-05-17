@@ -42,6 +42,9 @@ public class MessageHandler {
                 case ADD:
                     command = config.commandAdd();
                     break;
+                case REMOVE:
+                    command = config.commandRemove();
+                    break;
                 default:
                     break;
             }

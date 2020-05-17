@@ -234,7 +234,7 @@ body, html{
 .rightMenu{
     position: absolute;
     width: calc(100% - 209px);
-    height: calc(100% - 200px);
+    height: calc(100% - 150px);
     background-color: white;
     border-style: solid;
     border-color: darkturquoise;
@@ -242,7 +242,32 @@ body, html{
     top:48px;
 }
 
-
+.sendPanel{
+    position: absolute;
+    width: calc(100% - 208px);
+    /*height: 23%;*/
+    background-color: white;
+    border-style: solid;
+    border-color: blue;
+    left: 204px;
+    bottom: 0;
+    top: calc(100% - 98px);
+}
+#message{
+    width: calc(100% - 100px);
+    height: 88px;
+    font-size: 18px;
+    resize: none;
+}
+#msgBtn{
+    position: absolute;
+    width: 95px;
+    height: 95px;
+    font-size: 20px;
+    /*margin: 1px;*/
+    color: white;
+    background-color: darkturquoise;
+}
 /*modal*/
 #overlay {
     position: fixed; /* Sit on top of the page content */

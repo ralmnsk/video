@@ -22,6 +22,8 @@ import static ralmnsk.video.rtc.Constants.*;
 public class CommandAdd extends CommandLogin {
     @Autowired
     private ChatService chatService;
+    @Autowired
+    private CommandChats commandChats;
 
     public CommandAdd(ObjectMapper objectMapper, ModelMapper modelMapper, UserService userService) {
         super(objectMapper, modelMapper, userService);
@@ -34,6 +36,7 @@ public class CommandAdd extends CommandLogin {
         User currentUser = getCurrentUser();
         if (remoteUser != null && currentUser != null && !isExistChat(remoteUser, currentUser)){
             createP2PChat(currentUser,remoteUser);
+            commandChats.execute();
         }
         return new TextMessage("add");
     }

@@ -11,7 +11,7 @@ public class Constants {
     public final static String MESSAGE = "message";
     public final static String USER_WRONG_LOG_PASS = "The wrong login or password was sent";
     public final static String USER_LOG_SUCCESS = "The user logged in successfully";
-    public final static String USERS = "users";
+//    public final static String USERS = "users";
     public final static String USERS_ERROR = "users error happened";
     public final static String KEY = "key";
     public final static String CALL = "call";
@@ -26,6 +26,7 @@ public class Constants {
     public final static String ADD = "add";
     public final static String FIND = "find";
     public final static String CHATS = "chats";
+    public final static String REMOVE = "remove";
     public final static String PERCENT = "%";
     public static final int RATE = 1000000;
 }

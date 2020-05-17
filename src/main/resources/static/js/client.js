@@ -12,7 +12,8 @@ var chats;
 var remoteUser;
 var localStream;
 var foundUsers;
-
+var ring = new Audio('../static/sound/ring.mp3');
+ring.loop = true;
 onloadPage();
 
 
@@ -48,8 +49,16 @@ function createConnection(){
 
     conn.onmessage = function(msg) {
         console.log("Got message", msg.data);
-        let content = JSON.parse(msg.data);
-        let data = content.data;
+        let content;
+        let data;
+        try{
+            content = JSON.parse(msg.data);
+            data = content.data;
+        } catch (error){
+            console.log("conn.onmessage() happened error: "+error);
+            content = {event:"default",
+                        data:"default"};
+        }
         switch (content.event) {
             // when somebody wants to call us
             case "offer":
@@ -81,6 +90,8 @@ function createConnection(){
                 handleFind(data);
                 break;
             default:
+                chats = null;
+                lightOffUsers();
                 break;
         }
     };
@@ -178,6 +189,9 @@ function handleAnswer(answer) {
 }
 
 function youHaveCall(data){
+    ring.play();
+    clearSearchPanel();
+    addPhonePic();
     console.log("youHaveCall(), data :",data);
     document.getElementById(data).style.background = "#FFA500";
     countCalls = countCalls+1;
@@ -347,16 +361,41 @@ var removeUser;
             break;
         case "find":
             addUser.style.display = "block";
-            removeUser.style.display = "block";
+            // removeUser.style.display = "block";
             break;
-        case "sendAddRemoteUser":
+        case "add":
             addUser.style.display = "none";
             removeUser.style.display = "none";
+            break;
+        case "remove":
+            addUser.style.display = "none";
+            removeUser.style.display = "block";
             break;
         default:
             addUser.style.display = "none";
             removeUser.style.display = "none";
             break;
+    }
+}
+
+function addPhonePic(){
+    let phonePic = document.getElementById("phonePicture");
+
+   removePhonePic();
+
+    let i = document.createElement("i");
+    i.className = "fa fa-phone";
+    i.onclick = function (){
+        call();
+    };
+    phonePic.appendChild(i);
+}
+
+function removePhonePic(){
+    let phonePic = document.getElementById("phonePicture");
+
+    while(phonePic.firstChild != null){
+        phonePic.firstChild.remove();
     }
 }
 
@@ -369,22 +408,28 @@ function addUser(){
 //choose remote user and make call
 function connectRemoteUser(event) {
     clearSearchPanel();
+    addPhonePic();
     remoteUser = this.id;
     // call();
     lightOffUsers();
     document.getElementById(this.id).style.background = "green";
     var elementRemoteUser = document.getElementById("remoteUser");
-    while(elementRemoteUser.firstChild != null){
-        elementRemoteUser.firstChild.remove();
-    }
+    clearRemoteUser();
     var textNode = document.createTextNode(remoteUser);
     elementRemoteUser.appendChild(textNode);
+    buttonsHandler("remove");
     console.log("connectRemoteUser, this id: "+remoteUser);
 }
 
+function clearRemoteUser(){
+    var elementRemoteUser = document.getElementById("remoteUser");
+    while(elementRemoteUser.firstChild != null){
+        elementRemoteUser.firstChild.remove();
+    }
+}
 
 function call() {
-
+    ring.pause();
     send({
         event:"call",
         data:remoteUser
@@ -442,6 +487,9 @@ function hangUp(data) {
 
 
 function stopCall() {
+    ring.pause();
+    clearRemoteUser();
+    removePhonePic();
     hangUp();
     send({
         event:"hangup",
@@ -461,17 +509,19 @@ function lightOffUsers(data){
         }
         // chats = new Map(Object.entries(chats));
         console.log("lightOffUsers, chats: "+chats);
-        for(let chat of chats.keys()){
-            if(chat != login){
-                var node = document.createElement("li");
-                var button = document.createElement("a");
-                var textNode = document.createTextNode(chat);
-                button.id = chat;
+        if (chats != null){
+            for(let chat of chats.keys()){
+                if(chat != login){
+                    var node = document.createElement("li");
+                    var button = document.createElement("a");
+                    var textNode = document.createTextNode(chat);
+                    button.id = chat;
 
-                button.appendChild(textNode);
-                node.appendChild(button);
-                button.onclick = connectRemoteUser;
-                document.getElementById("usersList").appendChild(node);
+                    button.appendChild(textNode);
+                    node.appendChild(button);
+                    button.onclick = connectRemoteUser;
+                    document.getElementById("usersList").appendChild(node);
+                }
             }
         }
     console.log('lightOffUsers, data ', data);
@@ -558,7 +608,7 @@ function onloadPage(){
         createConnection();
         // buttonsHandler();
 
-    },500);
+    },250);
 
 };
 
@@ -582,6 +632,7 @@ function off() {
 //search panel function -----------------------------------------------------
 
 function search() {
+    removePhonePic();
     lightOffUsers();
     var input, filter;
     input = document.getElementById("search");
@@ -592,7 +643,7 @@ function search() {
             data : filter
         });
     }
-    buttonsHandler("sendAddRemoteUser");
+    buttonsHandler("add");
     console.log("search(): "+ input.value);
 }
 
@@ -603,16 +654,30 @@ function clearSearchPanel(){
     }
     let search = document.getElementById("search");
     search.value = "";
-    buttonsHandler("sendAddRemoteUser");
+    buttonsHandler("add");
     console.log("clearSearchPanel()");
 }
 
 function sendAddRemoteUser() {
-
         send({
             event : "add",
             data : remoteUser
         });
-        buttonsHandler("sendAddRemoteUser")
-    console.log("sendAddRemoteUser(): add"+ remoteUser);
+        buttonsHandler("add");
+    console.log("sendAddRemoteUser(): add "+ remoteUser);
 }
+
+function sendRemoveRemoteUser(){
+        send({
+            event : "remove",
+            data : remoteUser
+        });
+        buttonsHandler();
+            let list = document.getElementById("remoteUser");
+            while(list.firstChild != null){
+                list.firstChild.remove();
+            }
+        remoteUser = null;
+        console.log("sendRemoveRemoteUser(): remove "+ remoteUser);
+}
+

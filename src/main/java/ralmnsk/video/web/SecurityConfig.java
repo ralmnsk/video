@@ -38,8 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/",
                             "/logout",
                             "/static/js/",
-                            "static/css/",
-                            "static/sound/",
+                            "/static/css/",
+                            "/static/sound/",
                             "/error")
                     .permitAll()
                 .and()
